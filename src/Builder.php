@@ -13,6 +13,16 @@ class Builder
     const PAGINATION_MAPPING_PER_PAGE = 'per_page';
     const PAGINATION_MAPPING_CURRENT_PAGE = 'current_page';
 
+    static $operatorMap = [
+        '<>' => 'ne',
+        '<' => 'lt',
+        '<=' => 'le',
+        '=' => 'eq',
+        '>=' => 'ge',
+        '>' => 'gt',
+        'like' => 'like'
+    ];
+
     /**
      * @var array
      */
@@ -113,18 +123,25 @@ class Builder
 
     /**
      * Add a basic where clause to the query.
+     * When operator is given, a colon separated operator key (see operatorMap) will
+     * added before the query value
      *
-     * @param      $field
+     * @param string|array $field
+     * @param string|null $operator
      * @param null $value
      *
      * @return self
      */
-    public function where($field, $value = null)
+    public function where($field, $operator = null, $value = null)
     {
+        if(is_null($value)){
+            $value = $operator;
+        } else {
+            $value = static::$operatorMap[$operator] . ':' . $value;
+        }
         if (!is_array($field)) {
             $field = [$field => $value];
         }
-
         $this->query = array_merge($this->query, $field);
 
         return $this;
