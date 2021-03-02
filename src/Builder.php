@@ -13,7 +13,7 @@ class Builder
     const PAGINATION_MAPPING_PER_PAGE = 'per_page';
     const PAGINATION_MAPPING_CURRENT_PAGE = 'current_page';
 
-    static $operatorMap = [
+    static protected $operatorMap = [
         '<>' => 'ne',
         '<' => 'lt',
         '<=' => 'le',
