@@ -8,6 +8,7 @@ class Builder
 {
     const MAX_RESULTS = 9999;
 
+    const FILTER_MAPPING_LIMIT = 'limit';
     const PAGINATION_MAPPING_PAGE = 'page';
     const PAGINATION_MAPPING_TOTAL = 'total';
     const PAGINATION_MAPPING_PER_PAGE = 'per_page';
@@ -134,10 +135,12 @@ class Builder
      */
     public function where($field, $operator = null, $value = null)
     {
-        if(is_null($value)){
-            $value = $operator;
-        } else {
-            $value = static::$operatorMap[$operator] . ':' . $value;
+        if(!in_array($field, [static::FILTER_MAPPING_LIMIT, static::PAGINATION_MAPPING_PAGE])){
+            if(func_num_args() === 2){
+                $value = static::$operatorMap['='] . ':' . $operator;
+            } else {
+                $value = static::$operatorMap[$operator] . ':' . $value;
+            }
         }
         if (!is_array($field)) {
             $field = [$field => $value];
@@ -176,7 +179,7 @@ class Builder
      */
     public function limit($value)
     {
-        return $this->where('limit', $value);
+        return $this->where(static::FILTER_MAPPING_LIMIT, $value);
     }
 
     /**
@@ -189,7 +192,7 @@ class Builder
      */
     public function forPage($page, $perPage = 15)
     {
-        return $this->where('page', $page)->take($perPage);
+        return $this->where(static::PAGINATION_MAPPING_PAGE, $page)->take($perPage);
     }
 
     /**
