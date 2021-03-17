@@ -135,19 +135,218 @@ class Builder
      */
     public function where($field, $operator = null, $value = null)
     {
-        if(!in_array($field, [static::FILTER_MAPPING_LIMIT, static::PAGINATION_MAPPING_PAGE])){
-            if(func_num_args() === 2){
-                $value = static::$operatorMap['='] . ':' . $operator;
-            } else {
-                $value = static::$operatorMap[$operator] . ':' . $value;
-            }
+        if(!is_array($field) && in_array($field, [static::FILTER_MAPPING_LIMIT, static::PAGINATION_MAPPING_PAGE])){
+            return $this;
         }
+
+        if(func_num_args() === 2){
+            $value = $operator;
+            $operator = '=';
+        }
+        $value = static::$operatorMap[$operator] . ':' . $value;
         if (!is_array($field)) {
             $field = [$field => $value];
         }
         $this->query = array_merge($this->query, $field);
 
         return $this;
+    }
+
+    /**
+     * Add a "where" clause comparing two columns to the query.
+     *
+     * @param  string|array  $first
+     * @param  string|null  $operator
+     * @param  string|null  $second
+     * @param  string|null  $boolean
+     * @return self
+     */
+    public function whereColumn($first, $operator = null, $second = null, $boolean = 'and')
+    {
+        if(func_num_args() === 2){
+            $second = $operator;
+            $operator = '=';
+        }
+        $this->query = array_merge($this->query, [$first => 'column:' . static::$operatorMap[$operator] . ':' . $second]);
+        return $this;
+    }
+
+    /**
+     * Add a where between statement to the query.
+     *
+     * @param  string  $column
+     * @param  array  $values
+     * @param  string  $boolean
+     * @param  bool  $not
+     * @return self
+     */
+    public function whereBetween($column, array $values, $boolean = 'and', $not = false)
+    {
+        $this->query = array_merge($this->query, [$column => ($not ? 'not' : '') . 'between:' . implode(',', $values)]);
+        return $this;
+    }
+
+    /**
+     * Add a where not between statement to the query.
+     *
+     * @param  string  $column
+     * @param  array  $values
+     * @param  string  $boolean
+     * @return self
+     */
+    public function whereNotBetween($column, array $values, $boolean = 'and')
+    {
+        return $this->whereBetween($column, $values, $boolean, true);
+    }
+
+    /**
+     * Add a "where date" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  \DateTimeInterface|string|null  $value
+     * @param  string  $boolean
+     * @return self
+     */
+    public function whereDate($column, $operator, $value = null, $boolean = 'and')
+    {
+        if(func_num_args() === 2){
+            $value = $operator;
+            $operator = '=';
+        }
+        $this->query = array_merge($this->query, [$column => 'date:' . static::$operatorMap[$operator] . ':' . $value]);
+        return $this;
+    }
+
+    /**
+     * Add a "where day" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  \DateTimeInterface|string|null  $value
+     * @param  string  $boolean
+     * @return self
+     */
+    public function whereDay($column, $operator, $value = null, $boolean = 'and')
+    {
+        if(func_num_args() === 2){
+            $value = $operator;
+            $operator = '=';
+        }
+        $this->query = array_merge($this->query, [$column => 'day:' . static::$operatorMap[$operator] . ':' . $value]);
+        return $this;
+    }
+
+    /**
+     * Add a "where in" clause to the query.
+     *
+     * @param  string  $column
+     * @param  mixed  $values
+     * @param  string  $boolean
+     * @param  bool  $not
+     * @return self
+     */
+    public function whereIn($column, $values, $boolean = 'and', $not = false)
+    {
+        $this->query = array_merge($this->query, [$column => ($not ? 'not' : '') . 'in:' . implode(',', $values)]);
+        return $this;
+    }
+
+    /**
+     * Add a "where not in" clause to the query.
+     *
+     * @param  string  $column
+     * @param  mixed  $values
+     * @param  string  $boolean
+     * @return self
+     */
+    public function whereNotIn($column, $values, $boolean = 'and')
+    {
+        $this->whereIn($column, $values, $boolean, true);
+    }
+
+    /**
+     * Add a "where month" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  \DateTimeInterface|string|null  $value
+     * @param  string  $boolean
+     * @return self
+     */
+    public function whereMonth($column, $operator, $value = null, $boolean = 'and')
+    {
+        if(func_num_args() === 2){
+            $value = $operator;
+            $operator = '=';
+        }
+        $this->query = array_merge($this->query, [$column => 'month:' . static::$operatorMap[$operator] . ':' . $value]);
+        return $this;
+    }
+
+    /**
+     * Add a "where time" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  \DateTimeInterface|string|null  $value
+     * @param  string  $boolean
+     * @return self
+     */
+    public function whereTime($column, $operator, $value = null, $boolean = 'and')
+    {
+        if(func_num_args() === 2){
+            $value = $operator;
+            $operator = '=';
+        }
+        $this->query = array_merge($this->query, [$column => 'time:' . static::$operatorMap[$operator] . ':' . $value]);
+        return $this;
+    }
+
+    /**
+     * Add a "where year" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  \DateTimeInterface|string|int|null  $value
+     * @param  string  $boolean
+     * @return $this
+     */
+    public function whereYear($column, $operator, $value = null, $boolean = 'and')
+    {
+        if(func_num_args() === 2){
+            $value = $operator;
+            $operator = '=';
+        }
+        $this->query = array_merge($this->query, [$column => 'year:' . static::$operatorMap[$operator] . ':' . $value]);
+        return $this;
+    }
+
+    /**
+     * Add a "where null" clause to the query.
+     *
+     * @param  string|array  $column
+     * @param  string  $boolean
+     * @param  bool  $not
+     * @return $this
+     */
+    public function whereNull($column, $boolean = 'and', $not = false)
+    {
+        $this->query = array_merge($this->query, [$column => ($not ? 'not' : '') . 'null:']);
+        return $this;
+    }
+
+    /**
+     * Add a "where null" clause to the query.
+     *
+     * @param  string|array  $column
+     * @param  string  $boolean
+     * @param  bool  $not
+     * @return $this
+     */
+    public function whereNotNull($column, $boolean = 'and', $not = false)
+    {
+        return $this->whereNull($column, $boolean, true);
     }
 
     /**
@@ -179,7 +378,9 @@ class Builder
      */
     public function limit($value)
     {
-        return $this->where(static::FILTER_MAPPING_LIMIT, $value);
+        $field = [static::FILTER_MAPPING_LIMIT => $value];
+        $this->query = array_merge($this->query, $field);
+        return $this;
     }
 
     /**
@@ -192,7 +393,9 @@ class Builder
      */
     public function forPage($page, $perPage = 15)
     {
-        return $this->where(static::PAGINATION_MAPPING_PAGE, $page)->take($perPage);
+        $field = [static::PAGINATION_MAPPING_PAGE => $page];
+        $this->query = array_merge($this->query, $field);
+        return $this->take($perPage);
     }
 
     /**
@@ -300,9 +503,9 @@ class Builder
     public function paginate(?int $perPage = null, ?int $page = 1)
     {
         $this->limit($perPage);
-        $this->where([static::PAGINATION_MAPPING_PAGE => $page]);
+        $field = [static::PAGINATION_MAPPING_PAGE => $page];
+        $this->query = array_merge($this->query, $field);
 
-        $instance = $this->getModel();
         $entities = $this->raw();
 
         return [
