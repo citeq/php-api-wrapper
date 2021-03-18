@@ -262,7 +262,7 @@ class Builder
      */
     public function whereNotIn($column, $values, $boolean = 'and')
     {
-        $this->whereIn($column, $values, $boolean, true);
+        return $this->whereIn($column, $values, $boolean, true);
     }
 
     /**
