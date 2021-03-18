@@ -350,6 +350,29 @@ class Builder
     }
 
     /**
+     * Add a withTrashed parameter
+     *
+     * @return $this
+     */
+    public function withTrashed()
+    {
+        $this->query = array_merge($this->query, ['trashed' => 'with:']);
+        return $this;
+    }
+
+
+    /**
+     * Add a onlyTrashed parameter
+     *
+     * @return $this
+     */
+    public function onlyTrashed()
+    {
+        $this->query = array_merge($this->query, ['trashed' => 'only:']);
+        return $this;
+    }
+
+    /**
      * @return self[]
      */
     public function all()
