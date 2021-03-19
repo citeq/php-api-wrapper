@@ -8,6 +8,7 @@ class Builder
 {
     const MAX_RESULTS = 9999;
 
+    const SORT_ORDER = 'sort';
     const FILTER_MAPPING_LIMIT = 'limit';
     const PAGINATION_MAPPING_PAGE = 'page';
     const PAGINATION_MAPPING_TOTAL = 'total';
@@ -30,6 +31,11 @@ class Builder
     protected $query = [];
 
     /**
+     * @var array
+     */
+    protected $sortOrders = [];
+
+    /**
      * The model being queried.
      *
      * @var Model
@@ -45,7 +51,10 @@ class Builder
     {
         return array_merge(
             array_merge(...array_values($this->scopes)),
-            $this->query
+            $this->query,
+            [static::SORT_ORDER => implode(',', array_map(function($column, $direction){
+                return $column . ':' . $direction ;
+            }, array_keys($this->sortOrders), array_values($this->sortOrders)))]
         );
     }
 
@@ -92,6 +101,30 @@ class Builder
         return $this->get()[0] ?? null;
     }
 
+    /**
+     * @param string $column
+     * @param string $direction
+     * @return $this
+     */
+    public function orderBy($column, string $direction)
+    {
+        if (! in_array($direction, ['asc', 'desc'], true)) {
+            throw new \InvalidArgumentException('Order direction must be "asc" or "desc".');
+        }
+
+        if (!is_array($column)) {
+            $column = [$column => $direction];
+        }
+        $this->sortOrders = array_merge($this->sortOrders, $column);
+
+        return $this;
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @return array|Builder|Builder[]|Model|mixed|null
+     */
     public function find($field, $value = null)
     {
         $res = null;
