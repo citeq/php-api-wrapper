@@ -356,7 +356,7 @@ class Builder
      */
     public function withTrashed()
     {
-        $this->query = array_merge($this->query, ['trashed' => 'with:']);
+        $this->query = array_merge($this->query, ['trashed' => 'with']);
         return $this;
     }
 
@@ -368,7 +368,7 @@ class Builder
      */
     public function onlyTrashed()
     {
-        $this->query = array_merge($this->query, ['trashed' => 'only:']);
+        $this->query = array_merge($this->query, ['trashed' => 'only']);
         return $this;
     }
 
