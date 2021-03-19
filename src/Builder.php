@@ -8,7 +8,7 @@ class Builder
 {
     const MAX_RESULTS = 9999;
 
-    const SORT_ORDER = 'sort';
+    const ORDER_BY = 'order_by';
     const FILTER_MAPPING_LIMIT = 'limit';
     const PAGINATION_MAPPING_PAGE = 'page';
     const PAGINATION_MAPPING_TOTAL = 'total';
@@ -33,7 +33,7 @@ class Builder
     /**
      * @var array
      */
-    protected $sortOrders = [];
+    protected $orderBy = [];
 
     /**
      * The model being queried.
@@ -52,9 +52,9 @@ class Builder
         return array_merge(
             array_merge(...array_values($this->scopes)),
             $this->query,
-            [static::SORT_ORDER => implode(',', array_map(function($column, $direction){
+            [static::ORDER_BY => implode(',', array_map(function($column, $direction){
                 return $column . ':' . $direction ;
-            }, array_keys($this->sortOrders), array_values($this->sortOrders)))]
+            }, array_keys($this->orderBy), array_values($this->orderBy)))]
         );
     }
 
@@ -115,7 +115,7 @@ class Builder
         if (!is_array($column)) {
             $column = [$column => $direction];
         }
-        $this->sortOrders = array_merge($this->sortOrders, $column);
+        $this->orderBy = array_merge($this->orderBy, $column);
 
         return $this;
     }

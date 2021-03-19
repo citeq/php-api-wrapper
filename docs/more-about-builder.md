@@ -64,4 +64,4 @@ specifies the number of records per page and has to be multiplied with (page - 1
 
 ### sorting
 
-Sort directives are passed using the `sort` parameter in the form: `sort=column:direction,[column:direction, ...]`
+Sort directives are passed using the `orderBy` parameter in the form: `orderBy=column:direction,[column:direction, ...]`
