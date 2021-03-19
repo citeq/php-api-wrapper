@@ -1,6 +1,6 @@
 <?php
 
-namespace  Cristal\ApiWrapper;
+namespace Cristal\ApiWrapper;
 
 use Cristal\ApiWrapper\Exceptions\ApiEntityNotFoundException;
 
@@ -54,8 +54,8 @@ class Builder
             $this->query,
             $this->orderBy ? [
                 static::ORDER_BY => implode(',', array_map(
-                    function($column, $direction){
-                        return $column . ':' . $direction ;
+                    function ($column, $direction) {
+                        return $column . ':' . $direction;
                     }, array_keys($this->orderBy), array_values($this->orderBy)
                 ))
             ] : []
@@ -112,7 +112,7 @@ class Builder
      */
     public function orderBy($column, string $direction)
     {
-        if (! in_array($direction, ['asc', 'desc'], true)) {
+        if (!in_array($direction, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException('Order direction must be "asc" or "desc".');
         }
 
@@ -154,7 +154,7 @@ class Builder
             return $this->where($this->query)->get()[0] ?? null;
         }
 
-        $data = $this->model->getApi()->{'get'.ucfirst($this->model->getEntity())}($field, $this->getQuery());
+        $data = $this->model->getApi()->{'get' . ucfirst($this->model->getEntity())}($field, $this->getQuery());
 
         return $this->model->newInstance($data, true);
     }
@@ -172,11 +172,11 @@ class Builder
      */
     public function where($field, $operator = null, $value = null)
     {
-        if(!is_array($field) && in_array($field, [static::FILTER_MAPPING_LIMIT, static::PAGINATION_MAPPING_PAGE])){
+        if (!is_array($field) && in_array($field, [static::FILTER_MAPPING_LIMIT, static::PAGINATION_MAPPING_PAGE])) {
             return $this;
         }
 
-        if(func_num_args() === 2){
+        if (func_num_args() === 2) {
             $value = $operator;
             $operator = '=';
         }
@@ -192,15 +192,15 @@ class Builder
     /**
      * Add a "where" clause comparing two columns to the query.
      *
-     * @param  string|array  $first
-     * @param  string|null  $operator
-     * @param  string|null  $second
-     * @param  string|null  $boolean
+     * @param string|array $first
+     * @param string|null $operator
+     * @param string|null $second
+     * @param string|null $boolean
      * @return self
      */
     public function whereColumn($first, $operator = null, $second = null, $boolean = 'and')
     {
-        if(func_num_args() === 2){
+        if (func_num_args() === 2) {
             $second = $operator;
             $operator = '=';
         }
@@ -211,10 +211,10 @@ class Builder
     /**
      * Add a where between statement to the query.
      *
-     * @param  string  $column
-     * @param  array  $values
-     * @param  string  $boolean
-     * @param  bool  $not
+     * @param string $column
+     * @param array $values
+     * @param string $boolean
+     * @param bool $not
      * @return self
      */
     public function whereBetween($column, array $values, $boolean = 'and', $not = false)
@@ -226,9 +226,9 @@ class Builder
     /**
      * Add a where not between statement to the query.
      *
-     * @param  string  $column
-     * @param  array  $values
-     * @param  string  $boolean
+     * @param string $column
+     * @param array $values
+     * @param string $boolean
      * @return self
      */
     public function whereNotBetween($column, array $values, $boolean = 'and')
@@ -239,15 +239,15 @@ class Builder
     /**
      * Add a "where date" statement to the query.
      *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string|null  $value
-     * @param  string  $boolean
+     * @param string $column
+     * @param string $operator
+     * @param \DateTimeInterface|string|null $value
+     * @param string $boolean
      * @return self
      */
     public function whereDate($column, $operator, $value = null, $boolean = 'and')
     {
-        if(func_num_args() === 2){
+        if (func_num_args() === 2) {
             $value = $operator;
             $operator = '=';
         }
@@ -258,15 +258,15 @@ class Builder
     /**
      * Add a "where day" statement to the query.
      *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string|null  $value
-     * @param  string  $boolean
+     * @param string $column
+     * @param string $operator
+     * @param \DateTimeInterface|string|null $value
+     * @param string $boolean
      * @return self
      */
     public function whereDay($column, $operator, $value = null, $boolean = 'and')
     {
-        if(func_num_args() === 2){
+        if (func_num_args() === 2) {
             $value = $operator;
             $operator = '=';
         }
@@ -277,10 +277,10 @@ class Builder
     /**
      * Add a "where in" clause to the query.
      *
-     * @param  string  $column
-     * @param  mixed  $values
-     * @param  string  $boolean
-     * @param  bool  $not
+     * @param string $column
+     * @param mixed $values
+     * @param string $boolean
+     * @param bool $not
      * @return self
      */
     public function whereIn($column, $values, $boolean = 'and', $not = false)
@@ -292,9 +292,9 @@ class Builder
     /**
      * Add a "where not in" clause to the query.
      *
-     * @param  string  $column
-     * @param  mixed  $values
-     * @param  string  $boolean
+     * @param string $column
+     * @param mixed $values
+     * @param string $boolean
      * @return self
      */
     public function whereNotIn($column, $values, $boolean = 'and')
@@ -305,15 +305,15 @@ class Builder
     /**
      * Add a "where month" statement to the query.
      *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string|null  $value
-     * @param  string  $boolean
+     * @param string $column
+     * @param string $operator
+     * @param \DateTimeInterface|string|null $value
+     * @param string $boolean
      * @return self
      */
     public function whereMonth($column, $operator, $value = null, $boolean = 'and')
     {
-        if(func_num_args() === 2){
+        if (func_num_args() === 2) {
             $value = $operator;
             $operator = '=';
         }
@@ -324,15 +324,15 @@ class Builder
     /**
      * Add a "where time" statement to the query.
      *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string|null  $value
-     * @param  string  $boolean
+     * @param string $column
+     * @param string $operator
+     * @param \DateTimeInterface|string|null $value
+     * @param string $boolean
      * @return self
      */
     public function whereTime($column, $operator, $value = null, $boolean = 'and')
     {
-        if(func_num_args() === 2){
+        if (func_num_args() === 2) {
             $value = $operator;
             $operator = '=';
         }
@@ -343,15 +343,15 @@ class Builder
     /**
      * Add a "where year" statement to the query.
      *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string|int|null  $value
-     * @param  string  $boolean
+     * @param string $column
+     * @param string $operator
+     * @param \DateTimeInterface|string|int|null $value
+     * @param string $boolean
      * @return $this
      */
     public function whereYear($column, $operator, $value = null, $boolean = 'and')
     {
-        if(func_num_args() === 2){
+        if (func_num_args() === 2) {
             $value = $operator;
             $operator = '=';
         }
@@ -362,9 +362,9 @@ class Builder
     /**
      * Add a "where null" clause to the query.
      *
-     * @param  string|array  $column
-     * @param  string  $boolean
-     * @param  bool  $not
+     * @param string|array $column
+     * @param string $boolean
+     * @param bool $not
      * @return $this
      */
     public function whereNull($column, $boolean = 'and', $not = false)
@@ -376,9 +376,9 @@ class Builder
     /**
      * Add a "where null" clause to the query.
      *
-     * @param  string|array  $column
-     * @param  string  $boolean
-     * @param  bool  $not
+     * @param string|array $column
+     * @param string $boolean
+     * @param bool $not
      * @return $this
      */
     public function whereNotNull($column, $boolean = 'and', $not = false)
@@ -462,7 +462,7 @@ class Builder
      * Register a new global scope.
      *
      * @param string $identifier
-     * @param array  $scope
+     * @param array $scope
      *
      * @return $this
      */
@@ -476,7 +476,7 @@ class Builder
     /**
      * Remove a registered global scope.
      *
-     * @param  string  $identifier
+     * @param string $identifier
      * @return $this
      */
     public function withoutGlobalScope(string $identifier)
@@ -506,13 +506,13 @@ class Builder
      * Dynamically handle calls into the query instance.
      *
      * @param string $method
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return mixed
      */
     public function __call($method, $parameters)
     {
-        if (method_exists($this->model, $scope = 'scope'.ucfirst($method))) {
+        if (method_exists($this->model, $scope = 'scope' . ucfirst($method))) {
             return $this->callScope([$this->model, $scope], $parameters);
         }
 
@@ -543,7 +543,7 @@ class Builder
     {
         $instance = $this->getModel();
         try {
-            return $instance->getApi()->{'get'.ucfirst($instance->getEntities())}($this->getQuery());
+            return $instance->getApi()->{'get' . ucfirst($instance->getEntities())}($this->getQuery());
         } catch (ApiEntityNotFoundException $e) {
             return [];
         }
