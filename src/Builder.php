@@ -52,9 +52,13 @@ class Builder
         return array_merge(
             array_merge(...array_values($this->scopes)),
             $this->query,
-            [static::ORDER_BY => implode(',', array_map(function($column, $direction){
-                return $column . ':' . $direction ;
-            }, array_keys($this->orderBy), array_values($this->orderBy)))]
+            $this->orderBy ? [
+                static::ORDER_BY => implode(',', array_map(
+                    function($column, $direction){
+                        return $column . ':' . $direction ;
+                    }, array_keys($this->orderBy), array_values($this->orderBy)
+                ))
+            ] : []
         );
     }
 
